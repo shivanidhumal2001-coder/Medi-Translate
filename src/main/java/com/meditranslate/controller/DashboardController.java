@@ -33,6 +33,7 @@ public class DashboardController {
             reportTrustPercents.put(report.getId(), toPercent(report.getTrustScore()));
         }
 
+        System.err.println("Dashboard accessed by user: " + user.getUsername() + " with " + reports.size() + " reports.");
         model.addAttribute("currentUser", user);
         model.addAttribute("reports", reports);
         model.addAttribute("urgentReports", urgentReports);
