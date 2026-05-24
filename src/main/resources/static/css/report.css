@@ -1,0 +1,538 @@
+.report-page,
+.result-page {
+    padding: 48px 0 68px;
+}
+
+.report-intro,
+.result-hero {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 24px;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.report-intro h1,
+.result-hero h1 {
+    font-size: clamp(2.3rem, 4.5vw, 3.8rem);
+    line-height: 1.02;
+    margin: 14px 0;
+}
+
+.report-intro p,
+.result-hero p {
+    color: var(--muted);
+}
+
+.feature-stack {
+    display: grid;
+    gap: 14px;
+}
+
+.mini-card,
+.upload-card,
+.support-card,
+.glass-card {
+    padding: 26px;
+}
+
+.upload-layout,
+.result-grid,
+.medibot-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.upload-layout {
+    grid-template-columns: 1.08fr 0.92fr;
+}
+
+.result-grid {
+    grid-template-columns: 1fr;
+    margin-top: 16px;
+}
+
+.medibot-grid {
+    grid-template-columns: 1fr 1fr;
+    margin-top: 24px;
+}
+
+/* MediBot Q&A spans full width — gives it room to show rich formatted responses */
+.medibot-grid .bot-card {
+    grid-column: 1 / -1;
+}
+
+.file-dropzone {
+    padding: 18px;
+    border: 1px dashed rgba(15, 118, 110, 0.28);
+    border-radius: 20px;
+    background: rgba(15, 118, 110, 0.04);
+}
+
+.feature-list {
+    padding-left: 18px;
+    color: var(--muted);
+    display: grid;
+    gap: 10px;
+}
+
+.support-note {
+    color: var(--muted);
+    margin-top: 20px;
+}
+
+.result-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.tool-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.summary-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.summary-tools select {
+    min-width: 122px;
+    max-width: 220px;
+}
+
+.summary-language-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    color: var(--teal-deep);
+    font-weight: 600;
+}
+
+.summary-spinner {
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    border: 2px solid rgba(15, 118, 110, 0.18);
+    border-top-color: var(--teal);
+    animation: summary-spin 0.9s linear infinite;
+}
+
+.summary-text,
+.extracted-text {
+    white-space: pre-line;
+    color: var(--ink);
+    line-height: 1.7;
+}
+
+.summary-text.is-loading {
+    opacity: 0.55;
+    transition: opacity 0.2s ease;
+}
+
+.highlight-strip {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.highlight-strip > div {
+    padding: 18px;
+    border-radius: 20px;
+    background: rgba(15, 118, 110, 0.05);
+}
+
+.highlight-strip span {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.chat-thread {
+    min-height: 260px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 20px;
+    border-radius: 20px;
+    background: rgba(15, 118, 110, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.chat-bubble {
+    max-width: 82%;
+    padding: 14px 18px;
+    border-radius: 18px;
+    background: #ffffff;
+    color: var(--ink);
+    box-shadow: 0 14px 30px rgba(18, 39, 48, 0.08);
+    line-height: 1.7;
+}
+
+/* Bot messages get more width since they have rich content */
+.chat-bubble.bot {
+    max-width: 92%;
+    border-left: 3px solid var(--teal);
+}
+
+.compact-form {
+    gap: 14px;
+}
+
+.dynamic-results {
+    margin-top: 18px;
+    display: grid;
+    gap: 14px;
+}
+
+.dynamic-results .result-chip {
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(70, 64, 181, 0.06);
+}
+
+.extracted-text {
+    max-height: 420px;
+    overflow: auto;
+    padding: 18px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 1024px) {
+    .medibot-grid {
+        grid-template-columns: 1fr;
+    }
+    .medibot-grid .bot-card {
+        grid-column: 1;
+    }
+}
+
+@media (max-width: 900px) {
+    .report-intro,
+    .result-hero,
+    .upload-layout,
+    .highlight-strip,
+    .result-metrics {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Rich Summary Blocks ─────────────────────────────────────── */
+.summary-text { display: flex; flex-direction: column; gap: 16px; }
+
+.rs-overview {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: rgba(15,118,110,0.07); border-radius: 14px; padding: 16px 18px;
+}
+.rs-overview p { margin: 0; font-size: 1rem; line-height: 1.7; color: var(--ink); }
+
+.rs-block {
+    background: var(--surface, #fff); border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 14px; padding: 16px 18px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.rs-block-title {
+    font-weight: 700; font-size: 0.95rem; color: var(--brand, #0f766e);
+    margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px;
+}
+.rs-block p { margin: 0; line-height: 1.7; color: var(--ink); }
+
+.rs-urgency {
+    border-radius: 14px; padding: 14px 18px;
+    background: rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 8px;
+}
+.rs-urgency-badge {
+    display: inline-block; color: #fff; font-size: 0.78rem; font-weight: 700;
+    padding: 3px 10px; border-radius: 20px; letter-spacing: .5px; width: fit-content;
+}
+.rs-urgency p { margin: 0; line-height: 1.7; color: var(--ink); }
+
+.rs-trust {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: rgba(0,0,0,0.02); border-radius: 14px; padding: 14px 18px;
+}
+.rs-trust-body { display: flex; flex-direction: column; gap: 4px; }
+.rs-trust-reason { margin: 0; font-size: 0.87rem; color: #666; line-height: 1.6; }
+
+.rs-questions {
+    background: rgba(15,118,110,0.05); border-radius: 14px; padding: 16px 18px;
+}
+.rs-questions ul {
+    margin: 8px 0 0 0; padding-left: 18px;
+    display: flex; flex-direction: column; gap: 6px;
+}
+.rs-questions li { line-height: 1.6; color: var(--ink); }
+
+.rs-label { font-weight: 700; font-size: 0.95rem; margin: 0 0 4px 0; color: var(--ink); }
+.rs-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+
+@keyframes summary-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ── MediVerify Table — Status Badges ───────────────────────── */
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+}
+
+.badge-normal  { background: #dcfce7; color: #166534; }
+.badge-low     { background: #fef9c3; color: #854d0e; }
+.badge-high    { background: #fee2e2; color: #991b1b; }
+.badge-unknown { background: #f1f5f9; color: #475569; }
+
+.row-abnormal td:first-child {
+    border-left: 3px solid #f87171;
+}
+
+.row-normal td:first-child {
+    border-left: 3px solid #4ade80;
+}
+
+.value-cell {
+    font-weight: 600;
+    color: var(--ink);
+}
+
+/* ── MediBot Typing Indicator ────────────────────────────────── */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 20px;
+    width: fit-content;
+}
+
+.typing-indicator span {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--teal, #0f766e);
+    display: inline-block;
+    animation: typingBounce 1.2s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(1) { animation-delay: 0s; }
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30%            { transform: translateY(-7px); opacity: 1; }
+}
+
+/* ── Ask MediBot button spinner ─────────────────────────────── */
+.btn-spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    animation: btnSpin 0.75s linear infinite;
+    vertical-align: middle;
+}
+
+@keyframes btnSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* Button + Clear Chat row */
+.chat-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.chat-actions .primary-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 46px;
+}
+
+/* ── MediBot card — use full width nicely ───────────────────── */
+.bot-card .chat-form-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: end;
+}
+
+.bot-card .chat-form-row textarea {
+    resize: vertical;
+}
+
+.user {
+    margin-left: auto;
+    background: linear-gradient(135deg, #daf3ef, #eef6ff);
+}
+
+/* ── MediBot markdown rendering ──────────────────────────────── */
+/* MediBot markdown rendering taller thread is already set above */
+
+.chat-bubble.bot h1,
+.chat-bubble.bot h2,
+.chat-bubble.bot h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--brand, #0f766e);
+    margin: 12px 0 6px 0;
+}
+.chat-bubble.bot h3:first-child { margin-top: 0; }
+
+.chat-bubble.bot p { margin: 0 0 8px 0; line-height: 1.65; }
+.chat-bubble.bot p:last-child { margin-bottom: 0; }
+
+.chat-bubble.bot ul,
+.chat-bubble.bot ol {
+    margin: 4px 0 10px 0;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.chat-bubble.bot li { line-height: 1.6; }
+
+.chat-bubble.bot strong { color: var(--ink); font-weight: 700; }
+
+.chat-bubble.bot code {
+    background: rgba(15,118,110,0.1);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 0.85em;
+}
+
+.chat-bubble.bot hr {
+    border: none;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    margin: 10px 0;
+}
+
+/* "You might also ask" block styling */
+.chat-bubble.bot ul:last-child {
+    background: rgba(15,118,110,0.05);
+    border-radius: 10px;
+    padding: 10px 10px 10px 28px;
+    margin-top: 12px;
+}
+/* ═══════════════════════════════════════════════════════════════
+   Analyzing Overlay — shown on form submit while AI processes
+   ═══════════════════════════════════════════════════════════════ */
+.analyzing-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.analyzing-overlay[hidden] {
+    display: none;
+}
+
+.analyzing-box {
+    text-align: center;
+    max-width: 480px;
+    padding: 48px 36px;
+    background: #fff;
+    border-radius: 28px;
+    box-shadow: 0 24px 64px rgba(15, 118, 110, 0.15),
+                0 4px 16px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.analyzing-spinner {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 4px solid rgba(15, 118, 110, 0.15);
+    border-top-color: var(--teal, #0f766e);
+    animation: overlaySpinAnim 0.9s linear infinite;
+}
+
+@keyframes overlaySpinAnim {
+    to { transform: rotate(360deg); }
+}
+
+.analyzing-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--ink, #1a1a2e);
+    margin: 0;
+}
+
+.analyzing-status {
+    color: var(--teal, #0f766e);
+    font-weight: 600;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.analyzing-steps {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.step {
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: rgba(15, 118, 110, 0.04);
+    border: 1px solid rgba(15, 118, 110, 0.10);
+    font-size: 0.9rem;
+    color: #9ca3af;
+    text-align: left;
+    transition: all 0.4s ease;
+}
+
+.step.step-active {
+    background: rgba(15, 118, 110, 0.08);
+    border-color: rgba(15, 118, 110, 0.30);
+    color: var(--ink, #1a1a2e);
+    font-weight: 600;
+}
+
+.analyzing-note {
+    font-size: 0.82rem;
+    color: #9ca3af;
+    margin: 0;
+}
+
+/* Button spinner (reused on analyze btn too) */
+.primary-button .btn-spinner {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    animation: btnSpin 0.75s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+}

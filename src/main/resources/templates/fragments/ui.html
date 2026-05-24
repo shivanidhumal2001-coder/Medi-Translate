@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header(currentUser)" class="site-header">
+    <div class="shell nav-shell">
+        <a class="brand" th:href="@{/}">
+            <span class="brand-mark">M</span>
+            <span class="brand-copy">
+                <strong>MediTranslate</strong>
+                <small>Medical reports in plain language</small>
+            </span>
+        </a>
+        <nav class="top-nav">
+            <a th:href="@{/reports/new}">Analyze Report</a>
+            <a th:if="${currentUser != null}" th:href="@{/dashboard}">Dashboard</a>
+            <a th:if="${currentUser == null}" th:href="@{/auth/login}">Login</a>
+            <a th:if="${currentUser == null}" th:href="@{/auth/register}" class="button-link">Create Account</a>
+            <span th:if="${currentUser != null}" class="nav-user" th:text="${currentUser.fullName}">User</span>
+            <form th:if="${currentUser != null}" th:action="@{/logout}" method="post" class="nav-logout-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <button type="submit" class="ghost-button nav-logout-button">Logout</button>
+            </form>
+        </nav>
+    </div>
+</header>
+
+<footer th:fragment="footer" class="site-footer">
+    <div class="shell footer-grid">
+        <div>
+            <h4>MediTranslate</h4>
+            <p>Upload reports, understand them faster, verify the findings, and continue the conversation with context-aware support.</p>
+        </div>
+        <div>
+            <h4>Modules</h4>
+            <p>MediTranslate Core</p>
+            <p>MediVerify</p>
+            <p>MediBot</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

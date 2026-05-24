@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <title>MediTranslate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body>
+<div th:replace="~{fragments/ui :: header(${currentUser})}"></div>
+
+<main>
+    <section class="hero">
+        <div class="shell hero-grid">
+            <div class="hero-copy">
+                <span class="eyebrow">Spring Boot + MySQL Medical Assistant</span>
+                <h1>Turn difficult medical reports into simple, trustworthy explanations.</h1>
+                <p>MediTranslate follows the three-module flow from your diagram: report upload and OCR, layered verification, and a context-aware support assistant for follow-up questions and medication reminders.</p>
+                <div class="hero-actions">
+                    <a class="primary-button" th:href="@{/reports/new}">Start a Report Analysis</a>
+                    <a class="secondary-button" th:if="${currentUser == null}" th:href="@{/auth/register}">Create an Account</a>
+                    <a class="secondary-button" th:if="${currentUser != null}" th:href="@{/dashboard}">Open Dashboard</a>
+                </div>
+            </div>
+            <div class="hero-panel">
+                <div class="process-card">
+                    <h3>Flow Built From Your Module Image</h3>
+                    <ol>
+                        <li>User logs in or continues as guest.</li>
+                        <li>Text, image, or document report is uploaded.</li>
+                        <li>OCR/text extraction prepares the report.</li>
+                        <li>Plain-language summary is generated.</li>
+                        <li>MediVerify checks ranges and trust score.</li>
+                        <li>MediBot handles questions, symptoms, and reminders.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="shell modules-section">
+        <div class="section-heading">
+            <span class="eyebrow">Project Modules</span>
+            <h2>Three modules, one connected experience</h2>
+        </div>
+        <div class="module-grid">
+            <article class="module-card module-card-core">
+                <span>Module 1</span>
+                <h3>MediTranslate Core</h3>
+                <p>Guest and logged-in access, OCR/document parsing, simplified summary, multilingual output, urgency flags, TTS, PDF export, and history for signed-in users.</p>
+            </article>
+            <article class="module-card module-card-verify">
+                <span>Module 2</span>
+                <h3>MediVerify</h3>
+                <p>Three-layer verification compares values against printed lab ranges, WHO/ICMR-style reference ranges, or descriptive rules to build a trust score.</p>
+            </article>
+            <article class="module-card module-card-bot">
+                <span>Module 3</span>
+                <h3>MediBot</h3>
+                <p>Ask follow-up questions, relate symptoms to abnormal findings, and turn prescription text into a usable reminder table.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="shell value-section">
+        <div class="value-panel">
+            <div>
+                <span class="eyebrow">Why It Feels Professional</span>
+                <h2>Designed for clarity now and flexibility later</h2>
+            </div>
+            <div class="value-list">
+                <div>
+                    <h4>Future-ready architecture</h4>
+                    <p>OCR, summarization, verification, and MediBot all sit behind service interfaces so new APIs and rules can be added safely later.</p>
+                </div>
+                <div>
+                    <h4>Professional UI layering</h4>
+                    <p>Thymeleaf pages, separate CSS files, and separate JavaScript files keep the frontend maintainable as more features are added.</p>
+                </div>
+                <div>
+                    <h4>Real project database flow</h4>
+                    <p>MySQL-backed users, reports, trust findings, chat records, and reminders make the project feel like a proper product instead of a single-page prototype.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{fragments/ui :: footer}"></div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

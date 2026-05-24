@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <title th:text="${report.title + ' | MediTranslate'}">Report Result</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/report.css}">
+</head>
+<body>
+<div th:replace="~{fragments/ui :: header(${currentUser})}"></div>
+
+<main class="result-page" th:attr="data-report-id=${report.id}">
+    <section class="shell result-hero">
+        <div class="result-hero-copy">
+            <span class="eyebrow">Full Module Flow Result</span>
+            <h1 th:text="${report.title}">Report Title</h1>
+            <p>Core summary, layered verification, and MediBot support are all connected to this report.</p>
+        </div>
+        <div class="result-metrics">
+            <div class="metric-card">
+                <span>Urgency</span>
+                <strong th:text="${report.urgencyLevel}">MEDIUM</strong>
+            </div>
+            <div class="metric-card">
+                <span>Trust Score</span>
+                <strong th:text="${trustScorePercent + '%'}">80%</strong>
+            </div>
+            <div class="metric-card">
+                <span>Source</span>
+                <strong th:text="${report.sourceType}">DOCUMENT</strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="shell tool-row">
+        <a class="secondary-button" th:href="@{/reports/new}">Analyze Another Report</a>
+        <a class="secondary-button" th:href="@{|/reports/${report.id}/pdf|}">Download PDF</a>
+        <a class="secondary-button" th:if="${currentUser != null}" th:href="@{/dashboard}">Go to Dashboard</a>
+    </section>
+
+    <section class="shell result-grid">
+        <article class="glass-card summary-card">
+            <div class="card-head">
+                <div>
+                    <span class="eyebrow">Module 1</span>
+                    <h2>Simple Explanation</h2>
+                </div>
+                <div class="summary-tools">
+                    <select id="summaryLanguage">
+                        <option th:each="language : ${languageOptions.entrySet()}"
+                                th:value="${language.key}"
+                                th:selected="${language.key == report.summaryLanguage}"
+                                th:text="${language.value}"></option>
+                    </select>
+                    <select id="summaryVoice" hidden aria-label="Choose summary voice">
+                        <option value="">Best voice</option>
+                    </select>
+                    <button type="button" class="ghost-button" id="speakSummary">Speak</button>
+                </div>
+            </div>
+            <div id="summaryLanguageStatus" class="summary-language-status" hidden aria-live="polite">
+                <span class="summary-spinner" aria-hidden="true"></span>
+                <span>Translating full explanation...</span>
+            </div>
+            <div id="summaryText" class="summary-text" th:utext="${report.simpleSummary}">Summary</div>
+
+            <div class="highlight-strip">
+                <div>
+                    <span>Quick Highlights</span>
+                    <ul>
+                        <li th:each="line : ${reportHighlights}" th:text="${line}">Highlight</li>
+                    </ul>
+                </div>
+                <div>
+                    <span>Disclaimer</span>
+                    <p th:text="${report.disclaimer}">Disclaimer</p>
+                </div>
+            </div>
+        </article>
+
+        <article class="glass-card verification-card">
+            <div class="card-head">
+                <div>
+                    <span class="eyebrow">Module 2</span>
+                    <h2>MediVerify Comparison Table</h2>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Finding</th>
+                        <th>Your Value</th>
+                        <th>Normal Range</th>
+                        <th>Status</th>
+                        <th>AI Says</th>
+                        <th>System Verified</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="finding : ${report.findings}"
+                        th:classappend="${finding.abnormal} ? 'row-abnormal' : 'row-normal'">
+                        <td th:text="${finding.parameterName}">Hemoglobin</td>
+                        <td class="value-cell" th:text="${finding.patientValue + ' ' + (finding.unit == null ? '' : finding.unit)}">13.2 g/dL</td>
+                        <td th:text="${finding.normalRangeText}">12 - 16</td>
+                        <td>
+                            <span class="status-badge"
+                                  th:classappend="${finding.status.name() == 'NORMAL'} ? ' badge-normal'
+                                               : (${finding.status.name() == 'LOW'} ? ' badge-low'
+                                               : (${finding.status.name() == 'HIGH'} ? ' badge-high'
+                                               : ' badge-unknown'))"
+                                  th:text="${finding.status}">NORMAL</span>
+                        </td>
+                        <td th:text="${finding.aiInterpretation}">normal</td>
+                        <td th:text="${finding.systemInterpretation != null and !#strings.isEmpty(finding.systemInterpretation)}
+                                     ? ${finding.systemInterpretation}
+                                     : '—'">Within range</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(report.findings)}">
+                        <td colspan="6">No structured findings were parsed from this report. Descriptive verification was used where possible.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+
+    <section class="shell medibot-grid">
+        <article class="glass-card bot-card">
+            <div class="card-head">
+                <div>
+                    <span class="eyebrow">Module 3</span>
+                    <h2>MediBot Q&amp;A</h2>
+                </div>
+            </div>
+
+            <div id="chatMessages" class="chat-thread">
+                <div class="chat-bubble bot">Ask about your values, urgency, next steps, or report meaning.</div>
+                <div th:each="message : ${report.chatMessages}"
+                     class="chat-bubble"
+                     th:classappend="${message.sender.name() == 'USER'} ? ' user' : ' bot markdown-content'"
+                     th:attr="data-raw=${message.sender.name() == 'BOT'} ? ${message.message} : null"
+                     th:text="${message.sender.name() == 'USER'} ? ${message.message} : ''">Message</div>
+            </div>
+
+            <form id="chatForm" class="stack-form compact-form">
+                <label>
+                    <span>Follow-up Question</span>
+                    <textarea id="chatQuestion" rows="2" placeholder="Example: Is my hemoglobin low and what does that mean?"></textarea>
+                </label>
+                <div class="chat-actions">
+                    <button type="submit" id="chatSendBtn" class="primary-button">
+                        <span id="chatBtnLabel">Ask MediBot</span>
+                        <span id="chatBtnSpinner" class="btn-spinner" hidden aria-hidden="true"></span>
+                    </button>
+                    <button type="button" id="clearChat" class="ghost-button">Clear Chat</button>
+                </div>
+            </form>
+        </article>
+
+        <article class="glass-card symptom-card">
+            <div class="card-head">
+                <div>
+                    <span class="eyebrow">Symptom Checker</span>
+                    <h2>Link symptoms to findings</h2>
+                </div>
+            </div>
+
+            <form id="symptomForm" class="stack-form compact-form">
+                <label>
+                    <span>Symptoms</span>
+                    <textarea id="symptomInput" rows="4" placeholder="Example: fatigue, weakness, fever"></textarea>
+                </label>
+                <button type="submit" class="primary-button">Check Symptoms</button>
+            </form>
+
+            <div id="symptomResults" class="dynamic-results"></div>
+        </article>
+
+        <article class="glass-card reminder-card">
+            <div class="card-head">
+                <div>
+                    <span class="eyebrow">Medication Reminder</span>
+                    <h2>Build a schedule from prescription text</h2>
+                </div>
+            </div>
+
+            <form id="reminderForm" class="stack-form compact-form">
+                <label>
+                    <span>Prescription Text</span>
+                    <textarea id="prescriptionText" rows="5" placeholder="Example: Tab Paracetamol 500mg twice daily after food for 5 days"></textarea>
+                </label>
+                <button type="submit" class="primary-button">Generate Reminder Table</button>
+            </form>
+
+            <div class="table-wrap">
+                <table id="reminderTable">
+                    <thead>
+                    <tr>
+                        <th>Medicine</th>
+                        <th>Dosage</th>
+                        <th>Schedule</th>
+                        <th>Instruction</th>
+                        <th>Duration</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="reminder : ${report.reminders}">
+                        <td th:text="${reminder.medicineName}">Medicine</td>
+                        <td th:text="${reminder.dosage}">500mg</td>
+                        <td th:text="${reminder.scheduleText}">Once daily</td>
+                        <td th:text="${reminder.mealInstruction}">After food</td>
+                        <td th:text="${reminder.durationText}">5 days</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(report.reminders)}">
+                        <td colspan="5">No reminder schedule generated yet.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+
+    <section class="shell">
+        <article class="glass-card extracted-card">
+            <div class="card-head">
+                <div>
+                    <span class="eyebrow">Extracted Text</span>
+                    <h2>Raw report text used for analysis</h2>
+                </div>
+            </div>
+            <pre class="extracted-text" th:text="${report.extractedText}">Extracted text</pre>
+        </article>
+    </section>
+</main>
+
+<div th:replace="~{fragments/ui :: footer}"></div>
+
+<script th:inline="javascript">
+    window.reportId = [[${report.id}]];
+    window.reportTranslations = /*[[${report.multilingualSummaries}]]*/ {};
+</script>
+<script th:src="@{/js/app.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<script th:src="@{/js/report.js}"></script>
+</body>
+</html>

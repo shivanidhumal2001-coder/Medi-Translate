@@ -1,0 +1,41 @@
+.auth-page {
+    padding: 56px 0 72px;
+}
+
+.auth-layout {
+    display: grid;
+    grid-template-columns: 0.95fr 0.85fr;
+    gap: 28px;
+    align-items: center;
+}
+
+.auth-copy h1 {
+    font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+    line-height: 1.02;
+    margin: 14px 0 18px;
+}
+
+.auth-copy p {
+    color: var(--muted);
+    max-width: 56ch;
+}
+
+.auth-card {
+    padding: 30px;
+}
+
+.auth-muted,
+.auth-linkline {
+    color: var(--muted);
+}
+
+.auth-linkline a {
+    color: var(--teal);
+    font-weight: 700;
+}
+
+@media (max-width: 900px) {
+    .auth-layout {
+        grid-template-columns: 1fr;
+    }
+}
